@@ -96,7 +96,7 @@ def best_first_search(problem = GridProblem()):
     while not frontier.empty():
         node = frontier.get()[1]
         if (problem.isGoal(node.location)):
-            return True
+            return node
 
         for childNode in expand(problem, node):
             childLocation = childNode.location
@@ -110,8 +110,11 @@ def best_first_search(problem = GridProblem()):
     return False
 
 def main():
-    problem = GridProblem(Location(0, 0), Location(100, 100))
-    print(best_first_search(problem))
+    problem = GridProblem(Location(0, 0), Location(23, 50), 100, 100)
+    node = best_first_search(problem)
+    while (not (node == None)):
+        print(node.location.toNum())
+        node = node.parent
     print()
     
     
