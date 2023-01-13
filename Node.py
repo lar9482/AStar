@@ -1,7 +1,7 @@
 import math 
 from queue import PriorityQueue
 
-class Coord: 
+class Location: 
     def __init__(self, x = 0, y = 0):
         self.x = x
         self.y = y
@@ -10,26 +10,25 @@ class Coord:
         return (self.x, self.y)
 
 class Node:
-    def __init__(self, coord = Coord(0, 0), parent = None, action = "", cost = 0):
+    def __init__(self, location = Location(0, 0), parent = None, cost = 0):
 
         # The coord represents the state of the node
-        self.coord = coord
+        self.location = location
 
         self.parent = parent
 
-        self.action = action
         self.cost = cost
 
 
 
 class GridProblem:
 
-    def __init__(self, initialCoord = Coord(0, 0), goalCoord = Coord(100, 100), maxX = 100, maxY = 100):
+    def __init__(self, initialLocation = Location(0, 0), goalLocation = Location(100, 100), maxX = 100, maxY = 100):
         #Start state
-        self.initialCoord = initialCoord
+        self.initialLocation = initialLocation
 
         #End state
-        self.goalCoord = goalCoord
+        self.goalLocation = goalLocation
 
         #Blocked coords
         self.blockedCoords = []
@@ -52,18 +51,12 @@ class GridProblem:
                 coord.y < 0 or coord.y > self.maxY)
             
     
-    def result(self, coord, action):
-        match action:
-            case "Up":
-                return Coord(coord.x, coord.y+1)
-            case "Down":
-                return Coord(coord.x, coord.y-1)
-            case "Left":
-                return Coord(coord.x-1, coord.y)
-            case "Right":
-                return Coord(coord.x+1, coord.y)
-            case _:
-                Exception("Invalid Action Passed")
+    def get_neighbor_locations(self, location):
+
+        return [Location(location.x, location.y+1),
+                Location(location.x, location.y-1), 
+                Location(location.x-1, location.y),
+                Location(location.x+1, location.y)]
     
     def totalCost(self, coord):
         return self.actionCost() + self.euclideanHeuristicCost(coord)
@@ -71,34 +64,33 @@ class GridProblem:
     def actionCost(self):
         return 1
     
-    def euclideanHeuristicCost(self, coord):
-        distanceXSquared = abs(coord.x - self.goalCoord.x) ** 2
-        distanceYSquared = abs(coord.y - self.goalCoord.y) ** 2
+    def euclideanHeuristicCost(self, Location):
+        distanceXSquared = abs(Location.x - self.goalLocation.x) ** 2
+        distanceYSquared = abs(Location.y - self.goalLocation.y) ** 2
 
         return math.sqrt(distanceXSquared + distanceYSquared)
 
 def expand(problem, node = Node()):
-    initialCoords = node.coord
-    possibleActions = ["Up", "Down", "Left", "Right"]
+    initialLocation = node.location
     childNodes = []
 
-    for action in possibleActions:
-        resultCoord = problem.result(initialCoords, action)
-        cost = node.cost + problem.totalCost(resultCoord)
+    for resultLocation in problem.get_neighbor_locations(initialLocation):
+        
+        cost = node.cost + problem.totalCost(resultLocation)
 
-        if (not (problem.isBlockedCoord(resultCoord) or problem.outOfBounds(resultCoord))):
-            newNode = Node(resultCoord, node, action, cost)
+        if (not (problem.isBlockedCoord(resultLocation) or problem.outOfBounds(resultLocation))):
+            newNode = Node(resultLocation, node, cost)
             childNodes.append(newNode)
 
     return childNodes
 
 def bfs(problem):
-    node = Node(coord = problem.initialCoord) 
+    node = Node(coord = problem.initialLocation) 
 
     frontier = PriorityQueue()
     frontier.put((node.cost, node))
 
-    reached = {node.coord.toNum: node}
+    reached = {node.location.toNum: node}
 
 
 def main():
