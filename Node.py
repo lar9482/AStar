@@ -14,12 +14,11 @@ class Node:
 
         # The coord represents the state of the node
         self.location = location
-
         self.parent = parent
-
         self.cost = cost
 
-
+    def __lt__(self, other):
+        return (self.location.toNum() < other.location.toNum())
 
 class GridProblem:
 
@@ -103,39 +102,19 @@ def best_first_search(problem = GridProblem()):
             childLocation = childNode.location
 
             if ((reached.get(childLocation.toNum()) is None) or 
-                (childNode.cost < reached.get(childLocation.toNum()).cost)):
-
-                print(childNode.cost)
-                print(childNode.location.toNum())
-                
+                (childNode.cost < reached.get(childLocation.toNum()).cost)):                
                 reached[childLocation.toNum()] = childNode
                 frontier.put((childNode.cost, childNode))
-                
-            
-            
+
+
     return False
 
-    
-
-
-
 def main():
-    firstNode = Node(Location(0, 0), cost=2.0)
-    secondNode = Node(Location(10, 10), cost=2.0)
-    thirdNode = Node(Location(20, 20), cost=3.0)
-    queue = PriorityQueue()
-    queue.put((firstNode.cost, firstNode))
-    queue.put((secondNode.cost, secondNode))
-    queue.put((thirdNode.cost, thirdNode))
-
-
-    # problem = GridProblem(Location(0, 0), Location(1, 1))
-    # print(best_first_search(problem))
-    # print()
+    problem = GridProblem(Location(0, 0), Location(100, 100))
+    print(best_first_search(problem))
+    print()
     
     
-
-
 if __name__ == "__main__":
     main()
 
