@@ -37,6 +37,9 @@ class GridProblem:
         self.maxX = maxX
         self.maxY = maxY
     
+    def isGoal(self, location):
+        return (location.toNum() == self.goalLocation.toNum())
+
     def addBlockedLocation(self, location):
         self.blockedLocations.append(location)
     
@@ -69,7 +72,7 @@ class GridProblem:
 
         return math.sqrt(distanceXSquared + distanceYSquared)
 
-def expand(problem, node = Node()):
+def expand(problem, node):
     initialLocation = node.location
     childNodes = []
 
@@ -83,42 +86,52 @@ def expand(problem, node = Node()):
 
     return childNodes
 
-def bfs(problem):
-    node = Node(coord = problem.initialLocation) 
+def best_first_search(problem = GridProblem()):
+    node = Node(problem.initialLocation) 
 
     frontier = PriorityQueue()
     frontier.put((node.cost, node))
 
     reached = {node.location.toNum(): node}
 
+    while not frontier.empty():
+        node = frontier.get()[1]
+        if (problem.isGoal(node.location)):
+            return True
+
+        for childNode in expand(problem, node):
+            childLocation = childNode.location
+
+            if ((reached.get(childLocation.toNum()) is None) or 
+                (childNode.cost < reached.get(childLocation.toNum()).cost)):
+
+                print(childNode.cost)
+                print(childNode.location.toNum())
+                
+                reached[childLocation.toNum()] = childNode
+                frontier.put((childNode.cost, childNode))
+                
+            
+            
+    return False
+
+    
+
+
 
 def main():
-    # firstNode = Node(cost=15.15555555)
-    # secondNode = Node(cost=20.00052135413)
-    # thirdNode = Node(cost=141.14576455)
+    firstNode = Node(Location(0, 0), cost=2.0)
+    secondNode = Node(Location(10, 10), cost=2.0)
+    thirdNode = Node(Location(20, 20), cost=3.0)
+    queue = PriorityQueue()
+    queue.put((firstNode.cost, firstNode))
+    queue.put((secondNode.cost, secondNode))
+    queue.put((thirdNode.cost, thirdNode))
 
-    # queue = PriorityQueue()
-    # queue.put((firstNode.cost, firstNode))
-    # queue.put((secondNode.cost, secondNode))
-    # queue.put((thirdNode.cost, thirdNode))
 
-    # node = queue.get()[1]
+    # problem = GridProblem(Location(0, 0), Location(1, 1))
+    # print(best_first_search(problem))
     # print()
-
-    # map = {firstNode.location.toNum(): firstNode}
-
-    # test = map[firstNode.location.toNum()]
-    # print()
-    
-    startLocation = Location(10, 10)
-    endLocation = Location(50, 50)
-    problem = GridProblem(startLocation, endLocation)
-    problem.addBlockedLocation(Location(11, 10))
-    problem.addBlockedLocation(Location(9, 10))
-    
-
-    expandNodes_Start = expand(problem, Node(startLocation))
-    print()
     
     
 
