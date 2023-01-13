@@ -7,7 +7,7 @@ class Coord:
         self.y = y
 
     def toNum(self):
-        return self.x, self.y
+        return (self.x, self.y)
 
 class Node:
     def __init__(self, coord = Coord(0, 0), parent = None, action = "", cost = 0):
@@ -43,7 +43,7 @@ class GridProblem:
     
     def isBlockedCoord(self, coord):
         for blockedCoord in self.blockedCoords:
-            if (coord.x == blockedCoord.x and coord.y == blockedCoord.y):
+            if (blockedCoord.toNum() == coord.toNum()):
                 return True
         return False
     
@@ -90,25 +90,34 @@ def expand(problem, node = Node()):
             newNode = Node(resultCoord, node, action, cost)
             childNodes.append(newNode)
 
-
     return childNodes
 
-    
+def bfs(problem):
+    node = Node(coord = problem.initialCoord) 
+
+    frontier = PriorityQueue()
+    frontier.put((node.cost, node))
+
+    reached = {node.coord.toNum: node}
 
 
 def main():
-    problem = GridProblem()
-    problem.addBlockedCoord(Coord(1, 0))
-    nodes = expand(problem)
+    firstNode = Node(cost=15.15555555)
+    secondNode = Node(cost=20.00052135413)
+    thirdNode = Node(cost=141.14576455)
+
+    queue = PriorityQueue()
+    queue.put((firstNode.cost, firstNode))
+    queue.put((secondNode.cost, secondNode))
+    queue.put((thirdNode.cost, thirdNode))
+
+    node = queue.get()[1]
     print()
-    # blockCoord_1 = Coord(15, 15)
-    # blockCoord_2 = Coord(30, 30)
 
-    # problem.addBlockedCoord(blockCoord_1)
-    # problem.addBlockedCoord(blockCoord_2)
-    # print(problem.isBlockedCoord(Coord(15, 15)))
-    # print(problem.initialCoord.toNum())
+    map = {firstNode.coord.toNum(): firstNode}
 
+    test = map[firstNode.coord.toNum()]
+    print()
     
 
 
