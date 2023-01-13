@@ -30,7 +30,7 @@ class GridProblem:
         #End state
         self.goalLocation = goalLocation
 
-        #Blocked coords
+        #Blocked Locations
         self.blockedLocations = []
 
         #The uppper bound coordinates of the grid problem
@@ -72,13 +72,13 @@ class GridProblem:
 def expand(problem, node = Node()):
     initialLocation = node.location
     childNodes = []
-    
+
     for resultLocation in problem.get_neighbor_locations(initialLocation):
         
-        cost = node.cost + problem.totalCost(resultLocation)
+        resultCost = node.cost + problem.totalCost(resultLocation)
 
         if (not (problem.isBlockedLocation(resultLocation) or problem.outOfBounds(resultLocation))):
-            newNode = Node(resultLocation, node, cost)
+            newNode = Node(resultLocation, node, resultCost)
             childNodes.append(newNode)
 
     return childNodes
@@ -89,26 +89,37 @@ def bfs(problem):
     frontier = PriorityQueue()
     frontier.put((node.cost, node))
 
-    reached = {node.location.toNum: node}
+    reached = {node.location.toNum(): node}
 
 
 def main():
-    firstNode = Node(cost=15.15555555)
-    secondNode = Node(cost=20.00052135413)
-    thirdNode = Node(cost=141.14576455)
+    # firstNode = Node(cost=15.15555555)
+    # secondNode = Node(cost=20.00052135413)
+    # thirdNode = Node(cost=141.14576455)
 
-    queue = PriorityQueue()
-    queue.put((firstNode.cost, firstNode))
-    queue.put((secondNode.cost, secondNode))
-    queue.put((thirdNode.cost, thirdNode))
+    # queue = PriorityQueue()
+    # queue.put((firstNode.cost, firstNode))
+    # queue.put((secondNode.cost, secondNode))
+    # queue.put((thirdNode.cost, thirdNode))
 
-    node = queue.get()[1]
+    # node = queue.get()[1]
+    # print()
+
+    # map = {firstNode.location.toNum(): firstNode}
+
+    # test = map[firstNode.location.toNum()]
+    # print()
+    
+    startLocation = Location(10, 10)
+    endLocation = Location(50, 50)
+    problem = GridProblem(startLocation, endLocation)
+    problem.addBlockedLocation(Location(11, 10))
+    problem.addBlockedLocation(Location(9, 10))
+    
+
+    expandNodes_Start = expand(problem, Node(startLocation))
     print()
-
-    map = {firstNode.coord.toNum(): firstNode}
-
-    test = map[firstNode.coord.toNum()]
-    print()
+    
     
 
 
