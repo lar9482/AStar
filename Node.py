@@ -42,7 +42,7 @@ class GridProblem:
     
     def isBlockedCoord(self, coord):
         for blockedCoord in self.blockedCoords:
-            if (coord.toNum() == blockedCoord.toNum()):
+            if (coord.x == blockedCoord.x and coord.y == blockedCoord.y):
                 return True
         return False
     
@@ -76,7 +76,7 @@ class GridProblem:
 
         return math.sqrt(distanceXSquared + distanceYSquared)
 
-def expand(problem = GridProblem(), node = Node()):
+def expand(problem, node = Node()):
     initialCoords = node.coord
     possibleActions = ["Up", "Down", "Left", "Right"]
     childNodes = []
@@ -84,6 +84,7 @@ def expand(problem = GridProblem(), node = Node()):
     for action in possibleActions:
         resultCoord = problem.result(initialCoords, action)
         cost = node.cost + problem.totalCost(resultCoord)
+
         if (not (problem.isBlockedCoord(resultCoord) or problem.outOfBounds(resultCoord))):
             newNode = Node(resultCoord, node, action, cost)
             childNodes.append(newNode)
@@ -97,7 +98,7 @@ def expand(problem = GridProblem(), node = Node()):
 def main():
     problem = GridProblem()
     problem.addBlockedCoord(Coord(1, 0))
-    nodes = expand()
+    nodes = expand(problem)
     print()
     # blockCoord_1 = Coord(15, 15)
     # blockCoord_2 = Coord(30, 30)
