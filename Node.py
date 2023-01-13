@@ -31,54 +31,53 @@ class GridProblem:
         self.goalLocation = goalLocation
 
         #Blocked coords
-        self.blockedCoords = []
+        self.blockedLocations = []
 
         #The uppper bound coordinates of the grid problem
         self.maxX = maxX
         self.maxY = maxY
     
-    def addBlockedCoord(self, coord):
-        self.blockedCoords.append(coord)
+    def addBlockedLocation(self, location):
+        self.blockedLocations.append(location)
     
-    def isBlockedCoord(self, coord):
-        for blockedCoord in self.blockedCoords:
-            if (blockedCoord.toNum() == coord.toNum()):
+    def isBlockedLocation(self, location):
+        for blockedLocation in self.blockedLocations:
+            if (blockedLocation.toNum() == location.toNum()):
                 return True
         return False
     
-    def outOfBounds(self, coord):
-        return (coord.x < 0 or coord.x > self.maxX or 
-                coord.y < 0 or coord.y > self.maxY)
+    def outOfBounds(self, location):
+        return (location.x < 0 or location.x > self.maxX or 
+                location.y < 0 or location.y > self.maxY)
             
     
     def get_neighbor_locations(self, location):
-
-        return [Location(location.x, location.y+1),
-                Location(location.x, location.y-1), 
-                Location(location.x-1, location.y),
-                Location(location.x+1, location.y)]
+        return [Location(location.x, location.y+1), #Up
+                Location(location.x, location.y-1), #Down
+                Location(location.x-1, location.y), #Left
+                Location(location.x+1, location.y)] #Right
     
-    def totalCost(self, coord):
-        return self.actionCost() + self.euclideanHeuristicCost(coord)
+    def totalCost(self, location):
+        return self.actionCost() + self.euclideanHeuristicCost(location)
 
     def actionCost(self):
         return 1
     
-    def euclideanHeuristicCost(self, Location):
-        distanceXSquared = abs(Location.x - self.goalLocation.x) ** 2
-        distanceYSquared = abs(Location.y - self.goalLocation.y) ** 2
+    def euclideanHeuristicCost(self, location):
+        distanceXSquared = abs(location.x - self.goalLocation.x) ** 2
+        distanceYSquared = abs(location.y - self.goalLocation.y) ** 2
 
         return math.sqrt(distanceXSquared + distanceYSquared)
 
 def expand(problem, node = Node()):
     initialLocation = node.location
     childNodes = []
-
+    
     for resultLocation in problem.get_neighbor_locations(initialLocation):
         
         cost = node.cost + problem.totalCost(resultLocation)
 
-        if (not (problem.isBlockedCoord(resultLocation) or problem.outOfBounds(resultLocation))):
+        if (not (problem.isBlockedLocation(resultLocation) or problem.outOfBounds(resultLocation))):
             newNode = Node(resultLocation, node, cost)
             childNodes.append(newNode)
 
