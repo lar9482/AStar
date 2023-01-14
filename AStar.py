@@ -1,6 +1,7 @@
 import math 
 from queue import PriorityQueue
 
+
 class Location: 
     def __init__(self, x = 0, y = 0):
         self.x = x
@@ -60,7 +61,7 @@ class GridProblem:
             for j in range(-1, 2):
                 if (not (i == 0 and j == 0)):
                     neighbor_locations.append(Location(location.x+i, location.y+j))
-                    
+
         return neighbor_locations
     
     def totalCost(self, location):
@@ -110,11 +111,10 @@ def best_first_search(problem = GridProblem()):
                 reached[childLocation.toNum()] = childNode
                 frontier.put((childNode.cost, childNode))
 
-
     return False
 
 def main():
-    problem = GridProblem(Location(0, 0), Location(23, 50), 100, 100)
+    problem = GridProblem(Location(0, 0), Location(134, 443), 500, 500)
     node = best_first_search(problem)
     while (not (node == None)):
         print(node.location.toNum())
