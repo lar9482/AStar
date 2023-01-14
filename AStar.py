@@ -53,11 +53,15 @@ class GridProblem:
                 location.y < 0 or location.y > self.maxY)
             
     
-    def get_neighbor_locations(self, location):
-        return [Location(location.x, location.y+1), #Up
-                Location(location.x, location.y-1), #Down
-                Location(location.x-1, location.y), #Left
-                Location(location.x+1, location.y)] #Right
+    def get_neighbor_locations(self, location):        
+        neighbor_locations = []
+
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if (not (i == 0 and j == 0)):
+                    neighbor_locations.append(Location(location.x+i, location.y+j))
+                    
+        return neighbor_locations
     
     def totalCost(self, location):
         return self.actionCost() + self.euclideanHeuristicCost(location)
