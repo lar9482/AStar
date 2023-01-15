@@ -1,4 +1,4 @@
-A simple implementation of the A* algorithm based on Best-First-Search from *Artificial Intelligence: A Modern Approach(4th ed pg 77 Fig 3.9)*
+A simple implementation of the A* algorithm based on Best-First-Search from *Artificial Intelligence: A Modern Approach(4th ed pg 73 Fig 3.7)*
 
 - The problem is a 2d grid of locations with a starting location and a goal location. 
 
